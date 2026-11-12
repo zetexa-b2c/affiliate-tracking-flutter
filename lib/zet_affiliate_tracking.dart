@@ -1,20 +1,6 @@
-/// ZetSIM Affiliate & Referral tracking SDK for Flutter apps, backed by the
-/// affiliate platform's public tracking API.
+/// Deprecated entry point, kept so code that imported the old file name
+/// still compiles. Import `package:affiliate_tracking/affiliate_tracking.dart`.
+@Deprecated('Import package:affiliate_tracking/affiliate_tracking.dart instead')
 library;
 
-export 'src/config.dart' show AffiliateConfig;
-export 'src/link_parser.dart' show AffiliateParams;
-export 'src/models.dart'
-    show
-        Attribution,
-        AttributionSource,
-        ConversionEventType,
-        ConversionResult,
-        ConversionStatus,
-        EventNames,
-        EventResult,
-        EventStatus;
-export 'src/platform.dart'
-    show InstallReferrerDetails, InstallReferrerException, InstallReferrerSource;
-export 'src/storage.dart' show KeyValueStore, MemoryStore, SharedPreferencesStore;
-export 'src/tracker.dart' show AffiliateTracker;
+export 'affiliate_tracking.dart';

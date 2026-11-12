@@ -8,8 +8,8 @@
 //     --dart-define=E2E_COUPON=<that affiliate's coupon code>
 //
 // It creates real clicks and conversions, so use a scratch program.
-import 'package:zet_affiliate_tracking/zet_affiliate_tracking.dart';
-import 'package:zet_affiliate_tracking/src/uuid.dart';
+import 'package:affiliate_tracking/affiliate_tracking.dart';
+import 'package:affiliate_tracking/src/uuid.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 

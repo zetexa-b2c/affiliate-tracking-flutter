@@ -1,4 +1,4 @@
-name: zet_affiliate_tracking
+name: affiliate_tracking
 description: >-
   Affiliate click and conversion tracking for Flutter apps: deep links, the
   Google Play install referrer, referral codes, and an offline retry queue.

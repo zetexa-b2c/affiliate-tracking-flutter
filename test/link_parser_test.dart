@@ -1,6 +1,6 @@
-import 'package:zet_affiliate_tracking/src/config.dart';
-import 'package:zet_affiliate_tracking/src/link_parser.dart';
-import 'package:zet_affiliate_tracking/src/uuid.dart';
+import 'package:affiliate_tracking/src/config.dart';
+import 'package:affiliate_tracking/src/link_parser.dart';
+import 'package:affiliate_tracking/src/uuid.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _ref = ['ref'];

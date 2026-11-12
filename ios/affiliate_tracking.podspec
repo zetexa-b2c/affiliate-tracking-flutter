@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
-  s.name             = 'zet_affiliate_tracking'
+  s.name             = 'affiliate_tracking'
   s.version          = '0.1.0'
-  s.summary          = 'ZetSIM Affiliate tracking Flutter SDK'
+  s.summary          = 'Affiliate tracking Flutter SDK'
   s.description      = <<-DESC
-ZetSIM Affiliate click, event and conversion tracking for Flutter apps.
+Affiliate click, event and conversion tracking for Flutter apps.
                        DESC
-  s.homepage         = 'https://zetsim.com'
+  s.homepage         = 'https://example.invalid'
   s.license          = { :type => 'BSD' }
-  s.author           = { 'ZetSim' => 'dev@zetsim.com' }
+  s.author           = { 'Affiliate platform' => 'noreply@example.invalid' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'

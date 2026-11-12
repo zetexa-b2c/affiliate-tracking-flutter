@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:zet_affiliate_tracking/zet_affiliate_tracking.dart';
-import 'package:zet_affiliate_tracking/src/api.dart';
+import 'package:affiliate_tracking/affiliate_tracking.dart';
+import 'package:affiliate_tracking/src/api.dart';
 import 'package:flutter_test/flutter_test.dart' hide Retry;
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
