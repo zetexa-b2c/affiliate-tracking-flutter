@@ -18,12 +18,26 @@ network is down, including across app restarts.
 
 ## Install
 
-The package is not on pub.dev. Depend on it by path or git:
+The package is not on pub.dev. Depend on it from git, pinned to a release tag:
 
 ```yaml
 dependencies:
   affiliate_tracking:
-    path: ../affiliate-platform-sdk-flutter
+    git:
+      url: https://github.com/zetexa-b2c/affiliate-tracking-flutter.git
+      ref: v0.1.0
+```
+
+The repository is private, so the machine running `flutter pub get` needs
+GitHub access to it (an SSH key or a credential helper; with SSH use
+`git@github.com:zetexa-b2c/affiliate-tracking-flutter.git`).
+
+For local work on the SDK itself, a path dependency also works:
+
+```yaml
+dependencies:
+  affiliate_tracking:
+    path: ../affiliate-tracking-flutter
 ```
 
 ## Use
@@ -247,10 +261,21 @@ flutter test test/live_backend_test.dart --dart-define=E2E_API=http://127.0.0.1:
 ```
 
 The example app in `example/` shows the attribution, the queue, and buttons
-to simulate a link, a referral code and a purchase:
+to simulate a link, a referral code and a purchase against a real backend:
 
 ```bash
+cd example
 flutter run --dart-define=AFFILIATE_API=http://10.0.2.2:8035 --dart-define=AFFILIATE_TRACKING_KEY=<key>
+```
+
+The inspector app in `test_sdk_app/` runs the SDK against a built-in mock
+server, so it needs no backend or key. Use it to click through links, codes,
+conversions, duplicates and clearing attribution:
+
+```bash
+cd test_sdk_app
+flutter test     # scripted smoke test
+flutter run      # try it by hand (macOS, Chrome, Android or iOS)
 ```
 
 To test a link on an emulator:
