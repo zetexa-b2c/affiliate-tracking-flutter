@@ -56,7 +56,7 @@ class _SdkDashboardPageState extends State<SdkDashboardPage> {
     text: 'SUMMER2026',
   );
   final TextEditingController _userIdController = TextEditingController(
-    text: 'user_102030@zetsim.com',
+    text: 'user_102030@example.com',
   );
   final TextEditingController _orderIdController = TextEditingController(
     text: 'ord_${DateTime.now().millisecondsSinceEpoch}',
@@ -589,7 +589,7 @@ class _SdkDashboardPageState extends State<SdkDashboardPage> {
           children: [
             const Text('1. Customer User Identity', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             const SizedBox(height: 4),
-            const Text('Links anonymous attribution touches with user account in ZetSim.', style: TextStyle(fontSize: 11, color: Colors.black54)),
+            const Text('Links anonymous attribution touches with user account in your app.', style: TextStyle(fontSize: 11, color: Colors.black54)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -646,15 +646,15 @@ class _SdkDashboardPageState extends State<SdkDashboardPage> {
                   onPressed: _handleDeepLink,
                 ),
                 OutlinedButton(
-                  child: const Text('Preset: ZetSim Promo', style: TextStyle(fontSize: 11)),
+                  child: const Text('Preset: Promo link', style: TextStyle(fontSize: 11)),
                   onPressed: () {
-                    _urlController.text = 'https://zetsim.com/go?ref=AFF_ZETSIM&utm_campaign=summer_2026&utm_source=instagram&sub1=influencer_99';
+                    _urlController.text = 'https://shop.example.com/go?ref=AFF_PROMO&utm_campaign=summer_2026&utm_source=instagram&sub1=influencer_99';
                   },
                 ),
                 OutlinedButton(
                   child: const Text('Preset: No Ref', style: TextStyle(fontSize: 11)),
                   onPressed: () {
-                    _urlController.text = 'https://zetsim.com/store/plans';
+                    _urlController.text = 'https://shop.example.com/store/plans';
                   },
                 ),
               ],

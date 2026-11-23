@@ -28,10 +28,6 @@ dependencies:
       ref: v0.2.0
 ```
 
-The repository is private, so the machine running `flutter pub get` needs
-GitHub access to it (an SSH key or a credential helper; with SSH use
-`git@github.com:zetexa-b2c/affiliate-tracking-flutter.git`).
-
 For local work on the SDK itself, a path dependency also works:
 
 ```yaml
