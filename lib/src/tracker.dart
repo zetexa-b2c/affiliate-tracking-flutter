@@ -456,10 +456,20 @@ class AffiliateTracker with WidgetsBindingObserver {
     };
   }
 
-  /// Reports an order cancellation or refund for an existing order conversion.
+  /// Refunds cannot be reported from an app.
   ///
-  /// Marks the conversion as reversed/refunded on the backend, updating the
-  /// status in the admin dashboard and voiding any associated commission.
+  /// The server only accepts a refund that carries the program's API secret
+  /// (or an HMAC signed with it), so that nobody holding the public tracking
+  /// key can void an affiliate's commission. An app cannot keep that secret,
+  /// so report refunds from your own server instead: `POST
+  /// /api/v1/t/refund` with the `X-API-Secret` header (the dashboard shows
+  /// the request on the program's Tracking tab).
+  ///
+  /// This method sends nothing and always returns
+  /// [ConversionStatus.rejected] with an explanation in
+  /// [ConversionResult.message].
+  @Deprecated('Report refunds from your server with the API secret; '
+      'an app cannot hold it. This method sends nothing.')
   Future<ConversionResult> trackRefund({
     required String orderId,
     num? refundAmount,
@@ -467,42 +477,17 @@ class AffiliateTracker with WidgetsBindingObserver {
     List<Map<String, dynamic>>? items,
   }) async {
     _checkNotDisposed();
-    final externalOrderId = orderId.trim();
-    if (externalOrderId.isEmpty) {
-      throw ArgumentError.value(orderId, 'orderId', 'must not be empty');
-    }
-
-    final event = await _serialized(() async {
-      if (_disposed) return null;
-      final ev = PendingEvent(
-        id: uuidV4(),
-        kind: EventKind.refund,
-        createdAt: _now(),
-        body: {
-          'external_order_id': externalOrderId,
-          if (refundAmount != null) 'refund_amount': refundAmount,
-          if (reason != null && reason.trim().isNotEmpty) 'reason': reason.trim(),
-          if (items != null) 'items': items,
-        },
-      );
-      await _queue.add(ev);
-      return ev;
-    });
-
-    if (event == null) {
-      return const ConversionResult(ConversionStatus.notAttributed);
-    }
-
-    final results = await _queue.flush();
-    return switch (results[event.id]) {
-      Delivered(:final json) =>
-        ConversionResult(ConversionStatus.recorded, conversionId: json['id'] as String?),
-      Duplicate() => const ConversionResult(ConversionStatus.duplicate),
-      Rejected(:final message) =>
-        ConversionResult(ConversionStatus.rejected, message: message),
-      Retry() || null => const ConversionResult(ConversionStatus.queued),
-    };
+    _log('trackRefund($orderId) ignored: refunds must come from your server');
+    return const ConversionResult(
+      ConversionStatus.rejected,
+      message: refundFromServerMessage,
+    );
   }
+
+  /// Why [trackRefund] does nothing.
+  static const refundFromServerMessage =
+      'Refunds must be reported from your server with the program API secret '
+      '(POST /api/v1/t/refund with the X-API-Secret header), not from the app.';
 
   /// Sends queued events now. Also happens on start, on app resume and after
   /// every new event, so apps rarely need to call it.

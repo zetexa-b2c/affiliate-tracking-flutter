@@ -25,7 +25,7 @@ dependencies:
   affiliate_tracking:
     git:
       url: https://github.com/zetexa-b2c/affiliate-tracking-flutter.git
-      ref: v0.1.0
+      ref: v0.2.0
 ```
 
 The repository is private, so the machine running `flutter pub get` needs
@@ -151,21 +151,18 @@ The SDK reads the Play Install Referrer on first launch. For it to carry the
 affiliate, the Play Store URL needs a `referrer` parameter:
 
 ```
-https://play.google.com/store/apps/details?id=com.example.shop&referrer=ref%3D<ref_code>
+https://play.google.com/store/apps/details?id=com.example.shop&referrer=ref%3D<ref_code>%26click_id%3D<click_id>
 ```
 
-On a landing page that runs the web snippet, build this URL with
-`affiliateSDK.playStoreUrl(url)`. It also passes the click id, so the app
-reuses the click the snippet already recorded instead of counting a second
-one:
+The platform's affiliate links (`/r/<ref_code>` and `/l/<ref_code>`) build
+this for you on Android: set **App deep link** and **Android package** in the
+program's settings (General, Website and app). If you also set your own
+Google Play URL, the affiliate is added to it; a link that is not Google Play
+(a short link, another store) cannot carry it. The click id lets the app
+reuse the click the link already recorded instead of counting a second one.
 
-```html
-<a id="get-app" href="https://play.google.com/store/apps/details?id=com.example.shop">Get the app</a>
-<script>
-  var a = document.getElementById("get-app");
-  a.href = affiliateSDK.playStoreUrl(a.href);
-</script>
-```
+If you build your own "Get the app" button, add the same `referrer` value
+yourself.
 
 The referrer is read once per install. Two cases are handled so that adding
 the SDK to an existing app does not inflate installs:
@@ -205,11 +202,15 @@ Sent to your affiliate backend only: the ref code, click id, order id (for
 `app_install`, `app_install:<key derived from the install>`), amount, currency and event type;
 a `Referer` of the link's scheme, host and
 path (no query); and a User-Agent such as
-`Mozilla/5.0 (Linux; Android 14) Mobile affiliate_tracking/0.1.0` from which
+`Mozilla/5.0 (Linux; Android 14) Mobile affiliate_tracking/0.2.0` from which
 the backend derives OS and phone/tablet. No advertising ids, device ids,
 contacts or location.
 
 ## Security
+
+Use the program's **tracking key**. Never put the **API secret key** in an
+app: anything inside an app can be read from the app file, and the secret
+lets its holder approve sales and reverse commissions.
 
 The tracking key is public by design, as it is for the web snippet. Anyone
 who has it can post clicks and conversions, and a conversion reported from
@@ -219,7 +220,25 @@ records before approving.
 
 For purchases, the stronger setup is to have your backend report the sale:
 send `AffiliateTracker.instance.attribution?.clickId` with the order, and let
-the server call `POST /api/v1/t/conversion` after payment succeeds.
+the server call `POST /api/v1/t/conversion` with the `X-API-Secret` header
+after payment succeeds. Sales reported that way can be approved
+automatically.
+
+### Refunds
+
+Refunds can only be reported from your server, because the server accepts a
+refund only with the API secret:
+
+```bash
+curl -X POST https://<platform>/api/v1/t/refund \
+  -H "Content-Type: application/json" \
+  -H "X-API-Secret: <api_secret_key>" \
+  -d '{"tracking_key": "<tracking_key>", "external_order_id": "ORD-12345", "refund_amount": 29.99}'
+```
+
+The dashboard shows both requests, filled in, on the program's Tracking tab.
+`trackRefund()` in the SDK is deprecated: it sends nothing and returns
+`rejected` with this explanation.
 
 ## Backend requirements
 
@@ -229,8 +248,9 @@ The SDK needs a backend that includes these changes (made alongside it):
   an `Origin` header. Apps send none, so earlier backends answer 403 to every
   app request on a program with an allowlist.
 - `analytics_service.py`: clicks from the SDK get `browser = "App"`.
-- `snippet.py`: `affiliateSDK.playStoreUrl()` for Android deferred
-  attribution.
+- `smart_link.py`: affiliate links on Android send users to Google Play with
+  `ref` and `click_id` in `referrer`, also when the program has its own
+  Google Play URL.
 
 ## Configuration
 

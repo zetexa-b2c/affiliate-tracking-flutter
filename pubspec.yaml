@@ -2,7 +2,7 @@ name: affiliate_tracking
 description: >-
   Affiliate click and conversion tracking for Flutter apps: deep links, the
   Google Play install referrer, referral codes, and an offline retry queue.
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 
 environment:

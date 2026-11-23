@@ -748,22 +748,18 @@ void main() {
   });
 
   group('trackRefund', () {
-    test('sends refund request with order id, amount and reason', () async {
+    test('sends nothing and says refunds come from the server', () async {
       final tracker = await start();
+      // ignore: deprecated_member_use_from_same_package
       final result = await tracker.trackRefund(
         orderId: 'ORDER-12345',
         refundAmount: 15.50,
         reason: 'Customer requested cancellation',
       );
 
-      expect(result.status, ConversionStatus.recorded);
-      expect(result.conversionId, 'conv-1');
-
-      final refundBody = backend.bodies('refund').single;
-      expect(refundBody['external_order_id'], 'ORDER-12345');
-      expect(refundBody['refund_amount'], 15.50);
-      expect(refundBody['reason'], 'Customer requested cancellation');
-      expect(refundBody['tracking_key'], 'test-tracking-key');
+      expect(result.status, ConversionStatus.rejected);
+      expect(result.message, AffiliateTracker.refundFromServerMessage);
+      expect(backend.bodies('refund'), isEmpty);
     });
   });
 }
